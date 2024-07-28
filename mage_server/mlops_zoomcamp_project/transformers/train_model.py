@@ -17,6 +17,8 @@ POSTGRES_USER = os.environ["POSTGRES_USER"]
 POSTGRES_PASSWORD = os.environ["POSTGRES_PASSWORD"]
 POSTGRES_HOST = os.environ["POSTGRES_HOST"]
 
+MLFLOW_BUCKET_NAME = os.environ["MLFLOW_BUCKET_NAME"]
+
 
 # Check if the experiment already exists
 def experiment_exists(name):
@@ -32,7 +34,7 @@ mlflow.set_tracking_uri(
 EXPERIMENT_NAME = "mlops-zoomcamp-ml-exp"
 if not experiment_exists(EXPERIMENT_NAME):
     mlflow.create_experiment(
-        EXPERIMENT_NAME, artifact_location="s3://bucket/experiments/"
+        EXPERIMENT_NAME, artifact_location="s3://{MLFLOW_BUCKET_NAME}/experiments/"
     )
 
 mlflow.set_experiment(EXPERIMENT_NAME)
