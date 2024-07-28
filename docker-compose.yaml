@@ -70,6 +70,8 @@ services:
     environment:
       - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY:-minio_user}
       - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY:-minio_password}
+      - AWS_ENDPOINT_URL=http://minio:9000
+      - AWS_DEFAULT_REGION=us-east-1
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - MLFLOW_S3_IGNORE_TLS=true
       - MLFLOW_BUCKET_NAME=bucket
@@ -78,10 +80,11 @@ services:
       --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       --host 0.0.0.0
       --port 5000
-      --serve-artifacts
-      --artifacts-destination s3://${MLFLOW_BUCKET_NAME}
+      --no-serve-artifacts
+      --default-artifact-root s3://${MLFLOW_BUCKET_NAME}
+
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${MLFLOW_PORT}/"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -99,6 +102,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY:-minio_password}
       - AWS_REGION=${AWS_REGION:-us-west-2}
       - AWS_ENDPOINT=${AWS_ENDPOINT:-http://minio:9000}
+      - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
+      - MLFLOW_S3_IGNORE_TLS=true
+      - MLFLOW_BUCKET_NAME=bucket
     ports:
       - 6789:6789
     volumes:
