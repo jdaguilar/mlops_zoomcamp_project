@@ -8,7 +8,10 @@ default:
   # AWS_SESSION_TOKEN: session_token (Used to generate Redshift credentials)
   AWS_REGION: "{{ env_var('AWS_REGION') }}"
   AWS_ENDPOINT: "{{ env_var('AWS_ENDPOINT') }}"
-  
+  MLFLOW_S3_ENDPOINT_URL: "{{ env_var('MLFLOW_S3_ENDPOINT_URL') }}"
+  MLFLOW_S3_IGNORE_TLS: "{{ env_var('MLFLOW_S3_IGNORE_TLS') }}"
+  MLFLOW_BUCKET_NAME: "{{ env_var('MLFLOW_BUCKET_NAME') }}"
+
   # Algolia
   ALGOLIA_APP_ID: app_id
   ALGOLIA_API_KEY: api_key
