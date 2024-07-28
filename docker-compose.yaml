@@ -4,6 +4,7 @@ services:
   # PostgreSQL database
   postgres:
     image: postgres:latest
+    hostname: postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
@@ -74,7 +75,7 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - MLFLOW_S3_IGNORE_TLS=true
-      - MLFLOW_BUCKET_NAME=bucket
+      - MLFLOW_BUCKET_NAME=artifacts
     command: >
       mlflow server
       --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
@@ -98,13 +99,21 @@ services:
     environment:
       - USER_CODE_PATH=/home/src/${PROJECT_NAME}
       - ENV=${ENV}
+      # AWS env variables
       - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY:-minio_user}
       - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY:-minio_password}
       - AWS_REGION=${AWS_REGION:-us-west-2}
       - AWS_ENDPOINT=${AWS_ENDPOINT:-http://minio:9000}
+      # MLFlow env variables
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - MLFLOW_S3_IGNORE_TLS=true
-      - MLFLOW_BUCKET_NAME=bucket
+      - MLFLOW_BUCKET_NAME=artifacts
+      # Postgress env variables
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+
     ports:
       - 6789:6789
     volumes:
