@@ -46,24 +46,12 @@ This project use Docker Compose to orchestrate a cluster with its own networks. 
 
 The deployment of this model is containerized in the Docker Compose file, with the name of `model_webserver`, deployment is exposed through the port `9696`. You can use the file `web_service/test.py`to probe the model.
 
-## Model monitoring
+## How to Reproduce
 
-- 0 points: No model monitoring
-- 2 points: Basic model monitoring that calculates and reports metrics
-- 4 points: Comprehensive model monitoring that sends alerts or runs a conditional workflow (e.g. retraining, generating debugging dashboard, switching to a different model) if the defined metrics threshold is violated
+1. Use the file `.env-example`, then create a copy and rename it to `.env`.
 
-Reproducibility
+2. Run the following command to start the services.
 
-- 0 points: No instructions on how to run the code at all, the data is missing
-
-- 2 points: Some instructions are there, but they are not complete OR instructions are clear and complete, the code works, but the data is missing
-
-- 4 points: Instructions are clear, it's easy to run the code, and it works. The versions for all the dependencies are specified.
-
-Best practices
-- There are unit tests (1 point)
-- There is an integration test (1 point)
-- Linter and/or code formatter are used (1 point)
-- There's a Makefile (1 point)
-- There are pre-commit hooks (1 point)
-- There's a CI/CD pipeline (2 points)
+```
+docker compose up -d
+```
