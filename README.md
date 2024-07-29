@@ -42,13 +42,11 @@ This project use Docker Compose to orchestrate a cluster with its own networks. 
 
 - MLFlow: Service used for Experiment tracking and model registry. It was adapted to use PostgreSQL database and MinIO server.
 
+## Model deployment
 
-Model deployment
-- 0 points: Model is not deployed
-- 2 points: Model is deployed but only locally
-- 4 points: The model deployment code is containerized and could be deployed to cloud or special tools for model deployment are used
+The deployment of this model is containerized in the Docker Compose file, with the name of `model_webserver`, deployment is exposed through the port `9696`. You can use the file `web_service/test.py`to probe the model.
 
-Model monitoring
+## Model monitoring
 
 - 0 points: No model monitoring
 - 2 points: Basic model monitoring that calculates and reports metrics
