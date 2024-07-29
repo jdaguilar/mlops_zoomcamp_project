@@ -113,21 +113,29 @@ services:
       - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
-
     ports:
       - 6789:6789
     volumes:
       - ./mage_server:/home/src/
     restart: on-failure:5
 
+  webserver:
+    image: model_webserver
+    build: ./web_service
+    ports:
+      - 9696:9696
+    environment:
+      # AWS env variables
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY:-minio_user}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY:-minio_password}
+      - AWS_ENDPOINT_URL=${AWS_ENDPOINT_URL:-http://minio:9000}
+      # Postgress env variables
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
 
 volumes:
   postgres_data:
   minio_data:
-
-  # networks:
-  #   frontend:
-  #     driver: bridge
-  #   backend:
-  #     driver: bridge
 
