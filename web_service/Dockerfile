@@ -11,6 +11,8 @@ RUN pipenv install --system --deploy
 
 COPY [ "predict.py", "./" ]
 
+COPY [ "extras", "./extras" ]
+
 EXPOSE 9696
 
 ENTRYPOINT [ "gunicorn", "--bind=0.0.0.0:9696", "predict:app" ]

@@ -7,9 +7,11 @@ name = "pypi"
 scikit-learn = "*"
 flask = "*"
 gunicorn = "*"
-mlflow = "*"
 psycopg2-binary = "*"
 boto3 = "*"
+evidently = "*"
+mlflow = {extras = ["extras"], version = "*"}
+s3fs = "*"
 
 [dev-packages]
 requests = "*"
