@@ -3,7 +3,7 @@ version: '3.7'
 services:
   # PostgreSQL database
   postgres:
-    image: postgres:latest
+    image: postgres:16
     hostname: postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-user}
@@ -16,7 +16,7 @@ services:
 
   # MinIO server
   minio:
-    image: minio/minio
+    image: minio/minio:RELEASE.2024-07-31T05-46-26Z.fips
     hostname: minio
     expose:
       - "9000"
@@ -39,7 +39,7 @@ services:
 
   # Create a bucket named "bucket" if it doesn't exist
   minio-create-bucket:
-    image: minio/mc
+    image: minio/mc:RELEASE.2024-07-26T13-08-44Z.fips
     depends_on:
       minio:
         condition: service_healthy
@@ -73,6 +73,9 @@ services:
       - MLFLOW_S3_ENDPOINT_URL=http://minio:9000
       - MLFLOW_S3_IGNORE_TLS=true
       - MLFLOW_BUCKET_NAME=artifacts
+      - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
+      - POSTGRES_USER=${POSTGRES_USER:-user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
     command: >
       mlflow server
       --backend-store-uri postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
@@ -89,12 +92,12 @@ services:
 
   mageai:
     image: mageai
-    command: mage start ${PROJECT_NAME}
+    command: mage start mlops_zoomcamp_project
     env_file:
       - .env
     build: ./mage_server
     environment:
-      - USER_CODE_PATH=/home/src/${PROJECT_NAME}
+      - USER_CODE_PATH=/home/src/mlops_zoomcamp_project
       - ENV=${ENV:-dev}
       # AWS env variables
       - AWS_ACCESS_KEY_ID=${MINIO_ROOT_USER:-minio_user}
@@ -119,6 +122,10 @@ services:
   webserver:
     image: model_webserver
     build: ./web_service
+    depends_on:
+      - postgres
+      - mlflow_server
+      - mageai
     ports:
       - 9696:9696
     environment:
@@ -131,6 +138,19 @@ services:
       - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+
+  grafana:
+    image: grafana/grafana
+    user: "472"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - webserver
+    volumes:
+      - ./grafana/config/grafana_datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
+      - ./grafana/config/grafana_dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
+      - ./grafana/dashboards:/opt/grafana/dashboards
+    restart: always
 
 volumes:
   postgres_data:
