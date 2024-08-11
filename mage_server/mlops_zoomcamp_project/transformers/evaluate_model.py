@@ -30,27 +30,6 @@ def transform(list_df: List[pd.DataFrame], clf, *args, **kwargs):
     X_train, y_train, X_val, y_val = list_df
     y_pred = clf.predict(X_val)
 
-    # y_val = y_val[y_val.columns[0]].to_numpy()
-    # label_classes = pd.Series(label_classes)
-
-    # with open(model_file_path, 'rb') as f:
-    #     model = joblib.load(f)
-
-    # n_label_classes = len(label_classes)
-    
-
-    # print('Sample predictions:')
-    # for i in y_pred[:10]:
-    #     print(f'    {float(i)}')
-    # print('\n')
-
-    # if np.issubdtype(label_classes.dtype, int):
-    #     label_indices = label_classes
-    # else:
-    #     label_indices = np.array(range(n_label_classes))
-
-    # target_names = [str(label) for label in label_classes]
-
     y_pred = clf.predict(X_val)
     roc_auc = roc_auc_score(y_val, y_pred)
 
