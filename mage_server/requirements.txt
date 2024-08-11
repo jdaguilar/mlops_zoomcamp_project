@@ -1,1 +1,1 @@
-mlflow[extras]
+mlflow[extras]==2.15.0
