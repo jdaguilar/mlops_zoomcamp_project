@@ -3,16 +3,9 @@ import os
 from flask import Flask, request, jsonify
 import mlflow.sklearn
 import pandas as pd
-from evidently.report import Report
-from evidently import ColumnMapping
-from evidently.metrics import (
-    ColumnDriftMetric,
-    DatasetDriftMetric,
-    DatasetMissingValuesMetric,
-)
 
 from extras.utils import prepare_features
-from extras.queries import prep_db, record_metrics_postgresql
+from extras.queries import prep_db, record_predictions
 
 
 POSTGRES_DBNAME = os.environ["POSTGRES_DBNAME"]
@@ -30,59 +23,21 @@ mlflow.set_tracking_uri(
 model_uri = f"models:/{MLFLOW_MODEL_NAME}/{MODEL_VERSION}"
 model = mlflow.sklearn.load_model(model_uri)
 
-reference_data = pd.read_csv("s3://data/train.csv")
-reference_data = prepare_features(reference_data)
-numerical_features = ["CreditScore", "Balance", "EstimatedSalary"]
-categorical_features = [
-    "HasCrCard",
-    "IsActiveMember",
-    "Geography_Germany",
-    "Geography_Spain",
-    "Gender_Male",
-]
-column_mapping = ColumnMapping(
-    prediction="Exited",
-    numerical_features=numerical_features,
-    categorical_features=categorical_features,
-    target=None,
-)
-report = Report(
-    metrics=[
-        ColumnDriftMetric(column_name="Exited"),
-        DatasetDriftMetric(),
-        DatasetMissingValuesMetric(),
-    ]
-)
-
 prep_db()
+
 
 def predict(features):
     current_data = features
 
-    preds = model.predict(current_data)
-    current_data["Exited"] = preds
+    # Return predicted label
+    y_pred = model.predict(current_data)
+    y_pred = int(y_pred[0])
 
-    report.run(
-        reference_data=reference_data,
-        current_data=current_data,
-        column_mapping=column_mapping,
-    )
+    # Return predicted probability
+    y_pred_prob = model.predict_proba(current_data)
+    y_pred_prob = max(y_pred_prob[0])
 
-    result = report.as_dict()
-
-    prediction_drift = result["metrics"][0]["result"]["drift_score"]
-    num_drifted_columns = result["metrics"][1]["result"]["number_of_drifted_columns"]
-    share_missing_values = result["metrics"][2]["result"]["current"][
-        "share_of_missing_values"
-    ]
-
-    record_metrics_postgresql(
-        prediction_drift,
-        num_drifted_columns,
-        share_missing_values,
-    )
-
-    return int(preds[0])
+    return y_pred, y_pred_prob
 
 
 app = Flask("churn-prediction")
@@ -93,8 +48,13 @@ def predict_endpoint():
     data = request.get_json()
     df = pd.DataFrame(data, index=[0])
     features = prepare_features(df)
-    pred = predict(features)
-    result = {"churn": pred}
+    y_pred, y_pred_prob = predict(features)
+    record_predictions(df, y_pred, y_pred_prob)
+
+    result = {
+        "churn": y_pred,
+        "prob": y_pred_prob,
+    }
 
     return jsonify(result)
 

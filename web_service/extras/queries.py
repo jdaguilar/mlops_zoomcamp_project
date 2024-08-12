@@ -1,24 +1,37 @@
 import datetime
 import os
 
-import psycopg2
+import mysql.connector
+from sqlalchemy import create_engine
 
 
-POSTGRES_DBNAME = os.environ["POSTGRES_DBNAME"]
-POSTGRES_USER = os.environ["POSTGRES_USER"]
-POSTGRES_PASSWORD = os.environ["POSTGRES_PASSWORD"]
-POSTGRES_HOST = os.environ["POSTGRES_HOST"]
+MYSQL_DATABASE = os.environ["MYSQL_DATABASE"]
+MYSQL_USER = os.environ["MYSQL_USER"]
+MYSQL_PASSWORD = os.environ["MYSQL_PASSWORD"]
+MYSQL_HOST = os.environ["MYSQL_HOST"]
+
 MLFLOW_MODEL_NAME = "clf-best-model"
 MODEL_VERSION = "latest"
 
-DROP_TABLE_QUERY = "drop table if exists evidently_metrics;"
 
 CREATE_TABLE_QUERY = """
-    create table public.evidently_metrics(
-        timestamp timestamp,
-        prediction_drift float,
-        num_drifted_columns integer,
-        share_missing_values float
+    CREATE TABLE IF NOT EXISTS prediction (
+        timestamp DATETIME,
+        id bigint,
+        CustomerId bigint,
+        Surname VARCHAR(100),
+        CreditScore bigint,
+        Geography VARCHAR(100),
+        Gender VARCHAR(100),
+        Age bigint,
+        Tenure bigint,
+        Balance bigint,
+        NumOfProducts bigint,
+        HasCrCard bigint,
+        IsActiveMember TINYINT,
+        EstimatedSalary double,
+        Exited TINYINT,
+        ExitedProbability double
     )
 """
 
@@ -32,43 +45,30 @@ INSERT_RECORD_QUERY = """
 
 
 def prep_db():
-    conn = psycopg2.connect(
-        host=POSTGRES_HOST,
-        port=5432,
-        dbname=POSTGRES_DBNAME,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
+
+    cnx = mysql.connector.connect(
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        host=MYSQL_HOST,
+        database=MYSQL_DATABASE,
+    )
+    cursor = cnx.cursor()
+
+    try:
+        cursor.execute(CREATE_TABLE_QUERY)
+        cnx.close()
+    except mysql.connector.Error as err:
+        print("Failed creating database: {}".format(err))
+        exit()
+
+
+def record_predictions(df, y_pred, y_pred_prob):
+    df["Exited"] = y_pred
+    df["ExitedProbability"] = y_pred_prob
+    df["timestamp"] = datetime.datetime.now()
+
+    engine = create_engine(
+        f"mysql+mysqlconnector://{MYSQL_USER}:{MYSQL_PASSWORD}@{MYSQL_HOST}/{MYSQL_DATABASE}"
     )
 
-    curr = conn.cursor()
-    curr.execute(DROP_TABLE_QUERY)
-    curr.execute(CREATE_TABLE_QUERY)
-    conn.commit()
-    conn.close()
-
-
-def record_metrics_postgresql(
-    prediction_drift,
-    num_drifted_columns,
-    share_missing_values,
-):
-    conn = psycopg2.connect(
-        host=POSTGRES_HOST,
-        port=5432,
-        dbname=POSTGRES_DBNAME,
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-    )
-
-    curr = conn.cursor()
-    curr.execute(
-        INSERT_RECORD_QUERY,
-        (
-            datetime.datetime.now(),
-            prediction_drift,
-            num_drifted_columns,
-            share_missing_values,
-        ),
-    )
-    conn.commit()
-    conn.close()
+    df.to_sql("prediction", con=engine, if_exists="append", index=False)

@@ -12,6 +12,8 @@ boto3 = "*"
 evidently = "*"
 mlflow = {extras = ["extras"], version = "*"}
 s3fs = "*"
+sqlalchemy = "*"
+mysql-connector-python = "*"
 
 [dev-packages]
 requests = "*"

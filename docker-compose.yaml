@@ -14,6 +14,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  # MySQL Database
+  mysql:
+    image: mysql:9.0.1
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-monitoring}
+      - MYSQL_USER=${MYSQL_USER:-monitoring_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-monitoring_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   # MinIO server
   minio:
     image: minio/minio:RELEASE.2024-07-31T05-46-26Z.fips
@@ -55,7 +68,6 @@ services:
       - ./data:/data
 
   mlflow_server:
-    restart: always
     build: ./mlflow_server
     image: mlflow_server
     container_name: mlflow_server
@@ -138,6 +150,11 @@ services:
       - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      # MySQL env variables
+      - MYSQL_HOST=${MYSQL_HOST:-mysql}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-monitoring}
+      - MYSQL_USER=${MYSQL_USER:-monitoring_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-monitoring_password}
 
   grafana:
     image: grafana/grafana
@@ -150,9 +167,9 @@ services:
       - ./grafana/config/grafana_datasources.yaml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
       - ./grafana/config/grafana_dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
       - ./grafana/dashboards:/opt/grafana/dashboards
-    restart: always
 
 volumes:
   postgres_data:
   minio_data:
+  mysql_data:
 
