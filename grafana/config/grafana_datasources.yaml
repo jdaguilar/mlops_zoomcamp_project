@@ -15,3 +15,15 @@ datasources:
     jsonData:
       sslmode: 'disable'
       database: mlflowdb
+
+  - name: MySQL
+    type: mysql
+    access: proxy
+    url: mysql:3306
+    database: monitoring
+    user: monitoring_user
+    secureJsonData:
+      password: 'monitoring_password'
+    jsonData:
+      sslmode: 'disable'
+      database: monitoring
