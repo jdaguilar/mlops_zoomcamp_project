@@ -1,48 +1,3 @@
-## Course Project
-
-Video: https://www.loom.com/share/8f99d25893de4fb8aaa95c0395c740b6
-
-### Objective
-
-The goal of this project is to apply everything we have learned
-in this course to build an end-to-end machine learning project.
-
-## Problem statement
-
-For the project, we will ask you to build an end-to-end ML project.
-
-For that, you will need:
-
-* Select a dataset that you're interested in (see [Datasets](#datasets))
-* Train a model on that dataset tracking your experiments
-* Create a model training pipeline
-* Deploy the model in batch, web service or streaming
-* Monitor the performance of your model
-* Follow the best practices
-
-
-## Technologies
-
-You don't have to limit yourself to technologies covered in the course. You can use alternatives as well:
-
-* **Cloud**: AWS, GCP, Azure, ...
-* **Experiment tracking tools**: MLFlow, Weights & Biases, ...
-* **Workflow orchestration**: Prefect, Airflow, Flyte, Kubeflow, Argo, ...
-* **Monitoring**: Evidently, WhyLabs/whylogs, ...
-* **CI/CD**: Github actions, Gitlab CI/CD, ...
-* **Infrastructure as code (IaC)**: Terraform, Pulumi, Cloud Formation, ...
-
-If you use a tool that wasn't covered in the course, be sure to explain what that tool does.
-
-If you're not certain about some tools, ask in Slack.
-
-## Peer reviewing
-
-> [!IMPORTANT]
-> To evaluate the projects, we'll use peer reviewing. This is a great opportunity for you to learn from each other.
-> * To get points for your project, you need to evaluate 3 projects of your peers
-> * You get 3 extra points for each evaluation
-
 ## Evaluation Criteria
 
 * Problem description
@@ -80,30 +35,3 @@ If you're not certain about some tools, ask in Slack.
     * [ ] There's a Makefile (1 point)
     * [ ] There are pre-commit hooks (1 point)
     * [ ] There's a CI/CD pipeline (2 points)
-
-> [!NOTE]
-> It's highly recommended to create a new repository for your project (not inside an existing repo) with a meaningful title, such as
-> "Car Price Prediction" or "Music Genre Classification" and include as many details as possible in the README file. ChatGPT can assist you with this. Doing so will not only make it easier to showcase your project for potential job opportunities but also have it featured on the [Projects Gallery App](#projects-gallery).
-> If you leave the README file empty or with minimal details, there may be point deductions as per the [Evaluation Criteria](#evaluation-criteria).
-
-## Resources
-
-### Datasets
-
-Refer to the provided [datasets](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/projects/datasets.md) for possible selection.
-
-### Projects Gallery
-
-Explore a collection of projects completed by members of our community. The projects cover a wide range of topics and utilize different tools and techniques. Feel free to delve into any project and see how others have tackled real-world problems with data, structured their code, and presented their findings. It's a great resource to learn and get ideas for your own projects.
-
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://datatalksclub-projects.streamlit.app/)
-
-### MLOps Zoomcamp 2023
-
-* [2023 Projects](../cohorts/2023/07-project)
-
-### MLOps Zoomcamp 2022
-
-* [2022 Projects](../cohorts/2022/07-project)
-
-
