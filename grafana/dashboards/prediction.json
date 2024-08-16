@@ -1,0 +1,417 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "axisSoftMin": 0.5,
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.7
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 11,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "dataset": "monitoring",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT ExitedProbability AS \"Exited = 1\", timestamp FROM monitoring.prediction WHERE Exited = '1' LIMIT 50 ",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "alias": "\"Exited = 1\"",
+                "parameters": [
+                  {
+                    "name": "ExitedProbability",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b88b8aa-4567-489a-bcde-f19159efd3ef",
+                  "properties": {
+                    "field": "Exited",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      "1"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "text"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "8a9a9ba9-0123-4456-b89a-b19159e7612a",
+              "type": "group"
+            },
+            "whereString": "Exited = '1'"
+          },
+          "table": "prediction"
+        },
+        {
+          "dataset": "monitoring",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "builder",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT ExitedProbability AS \"Exited = 0\", timestamp FROM monitoring.prediction WHERE Exited = '0' LIMIT 50 ",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "alias": "\"Exited = 0\"",
+                "parameters": [
+                  {
+                    "name": "ExitedProbability",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50,
+            "whereJsonTree": {
+              "children1": [
+                {
+                  "id": "8b88b8aa-4567-489a-bcde-f19159efd3ef",
+                  "properties": {
+                    "field": "Exited",
+                    "fieldSrc": "field",
+                    "operator": "equal",
+                    "value": [
+                      "0"
+                    ],
+                    "valueSrc": [
+                      "value"
+                    ],
+                    "valueType": [
+                      "text"
+                    ]
+                  },
+                  "type": "rule"
+                }
+              ],
+              "id": "8a9a9ba9-0123-4456-b89a-b19159e7612a",
+              "type": "group"
+            },
+            "whereString": "Exited = '0'"
+          },
+          "table": "prediction"
+        }
+      ],
+      "title": "Prediction Probabilites",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 10,
+        "x": 11,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "tooltip": {
+          "maxHeight": 600,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "dataset": "monitoring",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(timestamp) AS \"Exited = 1\"\nFROM monitoring.prediction \nWHERE Exited = '1'",
+          "refId": "A",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "Exited",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "alias": "\"count\"",
+                "name": "COUNT",
+                "parameters": [
+                  {
+                    "name": "timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "prediction"
+        },
+        {
+          "dataset": "monitoring",
+          "datasource": {
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "hide": false,
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(timestamp) AS \"Exited = 0\" \nFROM monitoring.prediction \nWHERE Exited = '0'",
+          "refId": "B",
+          "sql": {
+            "columns": [
+              {
+                "parameters": [
+                  {
+                    "name": "Exited",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "alias": "\"count\"",
+                "name": "COUNT",
+                "parameters": [
+                  {
+                    "name": "timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              }
+            ],
+            "groupBy": [
+              {
+                "property": {
+                  "type": "string"
+                },
+                "type": "groupBy"
+              }
+            ],
+            "limit": 50
+          },
+          "table": "prediction"
+        }
+      ],
+      "title": "Predictions Percentage",
+      "type": "piechart"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-7d",
+    "to": "now"
+  },
+  "timeRangeUpdatedDuringEditOrView": false,
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Prediction Dashboard",
+  "uid": "cduz6gq3e2r5sc",
+  "version": 2,
+  "weekStart": ""
+}
