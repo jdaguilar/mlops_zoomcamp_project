@@ -125,6 +125,8 @@ services:
       - POSTGRES_DBNAME=${POSTGRES_DB:-mlflowdb}
       - POSTGRES_USER=${POSTGRES_USER:-user}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
+      # Web service API
+      - WEB_SERVICE_URL=${WEB_SERVICE_URL:-http://web_service:9696/predict}
     ports:
       - 6789:6789
     volumes:
@@ -134,6 +136,7 @@ services:
   webserver:
     image: model_webserver
     build: ./web_service
+    hostname: web_service
     depends_on:
       - postgres
       - mlflow_server
