@@ -127,6 +127,12 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
       # Web service API
       - WEB_SERVICE_URL=${WEB_SERVICE_URL:-http://web_service:9696/predict}
+      # MySQL env variables
+      - MYSQL_HOST=${MYSQL_HOST:-mysql}
+      - MYSQL_DATABASE=${MYSQL_DATABASE:-monitoring}
+      - MYSQL_USER=${MYSQL_USER:-monitoring_user}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD:-monitoring_password}
+
     ports:
       - 6789:6789
     volumes:

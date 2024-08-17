@@ -11,6 +11,7 @@ default:
   MLFLOW_S3_ENDPOINT_URL: "{{ env_var('MLFLOW_S3_ENDPOINT_URL') }}"
   MLFLOW_S3_IGNORE_TLS: "{{ env_var('MLFLOW_S3_IGNORE_TLS') }}"
   MLFLOW_BUCKET_NAME: "{{ env_var('MLFLOW_BUCKET_NAME') }}"
+  WEB_SERVICE_URL: "{{ env_var('WEB_SERVICE_URL') }}"
 
   # Algolia
   ALGOLIA_APP_ID: app_id
@@ -72,11 +73,11 @@ default:
   MSSQL_PORT: 1433
   MSSQL_USER: SA
   # MySQL
-  MYSQL_DATABASE: database
-  MYSQL_HOST: host
-  MYSQL_PASSWORD: password
+  MYSQL_DATABASE: "{{ env_var('MYSQL_DATABASE') }}"
+  MYSQL_HOST: "{{ env_var('MYSQL_HOST') }}"
+  MYSQL_PASSWORD: "{{ env_var('MYSQL_PASSWORD') }}"
   MYSQL_PORT: 3306
-  MYSQL_USER: root
+  MYSQL_USER: "{{ env_var('MYSQL_USER') }}"
   # Pinot
   PINOT_HOST: hostname
   PINOT_PASSWORD: password
