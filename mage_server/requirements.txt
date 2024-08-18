@@ -1,1 +1,2 @@
 mlflow[extras]==2.15.0
+evidently==0.4.36
