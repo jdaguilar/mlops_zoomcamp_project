@@ -29,8 +29,8 @@
   "panels": [
     {
       "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "PCC52D03280B7034C"
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -87,7 +87,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 12,
         "x": 0,
         "y": 0
@@ -108,31 +108,34 @@
       },
       "targets": [
         {
+          "dataset": "monitoring",
           "datasource": {
-            "type": "postgres",
-            "uid": "PCC52D03280B7034C"
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
           },
           "editorMode": "code",
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
+          "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  \"timestamp\" AS \"time\",\n  prediction_drift\nFROM evidently_metrics\nWHERE\n  $__timeFilter(\"timestamp\")\nORDER BY 1",
+          "rawSql": "SELECT \n  CAST(prediction_drift AS FLOAT) as prediction_drift, \n  _timestamp \nFROM monitoring.dummy_metrics ",
           "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "prediction_drift"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "prediction_drift",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "_timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -146,16 +149,7 @@
             ],
             "limit": 50
           },
-          "table": "dummy_metrics",
-          "timeColumn": "\"timestamp\"",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
+          "table": "dummy_metrics"
         }
       ],
       "title": "Prediction Drift",
@@ -163,8 +157,8 @@
     },
     {
       "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "PCC52D03280B7034C"
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -237,7 +231,7 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 10,
         "w": 12,
         "x": 12,
         "y": 0
@@ -258,31 +252,34 @@
       },
       "targets": [
         {
+          "dataset": "monitoring",
           "datasource": {
-            "type": "postgres",
-            "uid": "PCC52D03280B7034C"
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
           },
           "editorMode": "code",
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
+          "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  \"timestamp\" AS \"time\",\n  share_missing_values\nFROM evidently_metrics\nWHERE\n  $__timeFilter(\"timestamp\")\nORDER BY 1",
+          "rawSql": "SELECT\n  _timestamp,\n  cast(share_missing_values as float) as share_missing_values\nFROM monitoring.dummy_metrics\n",
           "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "share_missing_values"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "share_missing_values",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "_timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -296,16 +293,7 @@
             ],
             "limit": 50
           },
-          "table": "dummy_metrics",
-          "timeColumn": "\"timestamp\"",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
+          "table": "dummy_metrics"
         }
       ],
       "title": "Share of missing values",
@@ -313,8 +301,8 @@
     },
     {
       "datasource": {
-        "type": "grafana-postgresql-datasource",
-        "uid": "PCC52D03280B7034C"
+        "type": "mysql",
+        "uid": "P211906C1C32DB77E"
       },
       "fieldConfig": {
         "defaults": {
@@ -387,10 +375,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 9,
         "w": 12,
         "x": 0,
-        "y": 9
+        "y": 10
       },
       "id": 4,
       "options": {
@@ -408,31 +396,34 @@
       },
       "targets": [
         {
+          "dataset": "monitoring",
           "datasource": {
-            "type": "postgres",
-            "uid": "PCC52D03280B7034C"
+            "type": "mysql",
+            "uid": "P211906C1C32DB77E"
           },
           "editorMode": "code",
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
+          "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  \"timestamp\" AS \"time\",\n  num_drifted_columns\nFROM evidently_metrics\nWHERE\n  $__timeFilter(\"timestamp\")\nORDER BY 1",
+          "rawSql": "SELECT \n  CAST(num_drifted_columns AS FLOAT) as num_drifted_columns, \n  _timestamp \nFROM monitoring.dummy_metrics\n",
           "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "num_drifted_columns"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
           "sql": {
             "columns": [
               {
-                "parameters": [],
+                "parameters": [
+                  {
+                    "name": "num_drifted_columns",
+                    "type": "functionParameter"
+                  }
+                ],
+                "type": "function"
+              },
+              {
+                "parameters": [
+                  {
+                    "name": "_timestamp",
+                    "type": "functionParameter"
+                  }
+                ],
                 "type": "function"
               }
             ],
@@ -446,16 +437,7 @@
             ],
             "limit": 50
           },
-          "table": "dummy_metrics",
-          "timeColumn": "\"timestamp\"",
-          "timeColumnType": "timestamp",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
+          "table": "dummy_metrics"
         }
       ],
       "title": "Number of Drifted Columns",
@@ -474,7 +456,7 @@
   "timeRangeUpdatedDuringEditOrView": false,
   "timepicker": {},
   "timezone": "",
-  "title": "New dashboard",
+  "title": "Drifts",
   "uid": "NPXSRpQ4z",
   "version": 1,
   "weekStart": ""
