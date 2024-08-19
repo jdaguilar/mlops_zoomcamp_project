@@ -54,6 +54,8 @@ This project use Docker Compose to orchestrate a cluster with its own networks. 
 
 ### ML Pipeline
 
+This pipeline is available into the Mage AI service with the name of `mlops_zoomcamp_project_ml_pipeline`, the steps are the following:
+
 ```mermaid
 graph LR;
 
@@ -74,9 +76,47 @@ graph LR;
 
 ```
 
+You should run the pipeline the first time to create the model and serve it.
+
+### Batch Prediction
+
+The pipeline `mlops_zoomcamp_project_batch_predictions` allows you to make a batch predictions.
+
+```mermaid
+graph LR;
+
+    A-->B;
+
+    A(get_dataset_to_predict)
+    B(mak_batch_predictions)
+
+```
+
+### Drift
+
+The pipeline `mlops_zoomcamp_project_drift` allows you to calculate prediction drifts.
+
+This pipeline should be run once batch predictions is run due to drift is calculated with batch data.
+
+```mermaid
+graph LR;
+
+    A-->C;
+    B-->C;
+    C-->D;
+
+    A(get_reference_data)
+    B(get_data_from_db)
+    C(make_prediction_drift)
+    D(write_data_into_db)
+
+```
+
 ## Model Deployment
 
 The deployment of this model is containerized in the Docker Compose file, with the name of `model_webserver`, deployment is exposed through the port `9696`. You can use the file `web_service/test.py`to probe the model.
+
+> :warning: Web service API will be available when you run Mage AI pipeline `mlops_zoomcamp_project_ml_pipeline`.
 
 ## How to Reproduce
 
@@ -88,4 +128,3 @@ The deployment of this model is containerized in the Docker Compose file, with t
     docker compose up -d
     ```
 
-    :warning: Web service API will be available when you run Mage AI pipeline the first time.
