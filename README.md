@@ -36,22 +36,45 @@ This project use Docker Compose to orchestrate a cluster with its own networks. 
 
 ![](architecture.png)
 
-- PostgreSQL: Database server which is used by MLFlow to save metadata.
+- **PostgreSQL:** Database server which is used by MLFlow to save metadata.
 
-- MinIO: Open source alternative to AWS S3, it's crucial to save datasets and the artifacts of MLFlow.
+- **MinIO:** Open source alternative to AWS S3, it's crucial to save datasets and the artifacts of MLFlow.
 
-- Mage AI: Workflow Orchestration service to run the ML pipelines.
+- **Mage AI:** Workflow Orchestration service to run the ML pipelines.
 
-- MLFlow: Service used for Experiment tracking and model registry. It was adapted to use PostgreSQL database as tracking and MinIO server to artifacts registry.
+- **MLFlow:** Service used for *Experiment tracking* and *Model registry*. It was adapted to use PostgreSQL database as tracking and MinIO server to artifacts registry.
 
-- Flask: Web service API to serve ML model in production to make predictions.
+- **Flask:** Web service API to serve ML model in production to make predictions.
 
-- MySQL: Database to save results of predictions, also it saves the calculation of drift.
+- **MySQL:** Database to save results of predictions, also it saves the calculation of drift.
 
-- Grafana: Real time monitoring service, it shows the results saved into the MySQL database.
+- **Grafana:** Real time monitoring service, it shows the results saved into the MySQL database.
 
+## Workflows
 
-## Model deployment
+### ML Pipeline
+
+```mermaid
+graph LR;
+
+    A-->B;
+    B-->C;
+    C-->D;
+    D-->E;
+    E-->F;
+    C-->E;
+    D-->F;
+
+    A(load_s3_training_file)
+    B(preprocess_files)
+    C(split_files)
+    D(train_model)
+    E(evaluate_model)
+    F(register_model)
+
+```
+
+## Model Deployment
 
 The deployment of this model is containerized in the Docker Compose file, with the name of `model_webserver`, deployment is exposed through the port `9696`. You can use the file `web_service/test.py`to probe the model.
 
@@ -61,6 +84,8 @@ The deployment of this model is containerized in the Docker Compose file, with t
 
 2. Run the following command to start the services.
 
-```
-docker compose up -d
-```
+    ```
+    docker compose up -d
+    ```
+
+    :warning: Web service API will be available when you run Mage AI pipeline the first time.
