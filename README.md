@@ -30,17 +30,26 @@ Reference: [Bank Customer Churn Prediction](https://www.kaggle.com/datasets/shub
 
 ## Cloud
 
-:warning: In order to save cost, this project is not deployed in cloud using IaC o similar tools. However, some services were adapted to be used by containers.
+:warning: In order to save cost, this project is not deployed in cloud using IaC. However, some services were adapted to be used by containers but they could be deployed on cloud.
 
 This project use Docker Compose to orchestrate a cluster with its own networks. The services used are the following:
+
+![](architecture.png)
 
 - PostgreSQL: Database server which is used by MLFlow to save metadata.
 
 - MinIO: Open source alternative to AWS S3, it's crucial to save datasets and the artifacts of MLFlow.
 
-- Mage: Workflow Orchestration service to run the ML pipeline.
+- Mage AI: Workflow Orchestration service to run the ML pipelines.
 
-- MLFlow: Service used for Experiment tracking and model registry. It was adapted to use PostgreSQL database and MinIO server.
+- MLFlow: Service used for Experiment tracking and model registry. It was adapted to use PostgreSQL database as tracking and MinIO server to artifacts registry.
+
+- Flask: Web service API to serve ML model in production to make predictions.
+
+- MySQL: Database to save results of predictions, also it saves the calculation of drift.
+
+- Grafana: Real time monitoring service, it shows the results saved into the MySQL database.
+
 
 ## Model deployment
 
