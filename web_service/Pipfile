@@ -14,6 +14,7 @@ mlflow = {extras = ["extras"], version = "*"}
 s3fs = "*"
 sqlalchemy = "*"
 mysql-connector-python = "*"
+nltk = "*"
 
 [dev-packages]
 requests = "*"
